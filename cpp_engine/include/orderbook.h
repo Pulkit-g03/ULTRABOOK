@@ -8,12 +8,16 @@
 
 class OrderBook {
 private:
-    std::map<double, std::deque<Order>, std::greater<double>> buyOrders;
-    std::map<double, std::deque<Order>> sellOrders;
+    struct Book {
+        std::map<double, std::deque<Order>, std::greater<double>> buyOrders;
+        std::map<double, std::deque<Order>> sellOrders;
+    };
+
+    std::map<int, Book> instrumentBooks;   // instrument_id -> Book
     std::vector<Trade> trades;
 
-    void matchBuy(Order& order);
-    void matchSell(Order& order);
+    void matchBuy(int instrument_id, Order& order);
+    void matchSell(int instrument_id, Order& order);
 
 public:
     void addOrder(Order order);

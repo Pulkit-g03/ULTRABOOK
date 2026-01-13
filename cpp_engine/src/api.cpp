@@ -1,23 +1,41 @@
 #include "../include/orderbook.h"
 
-static OrderBook ob;
+static OrderBook* book = nullptr;
 
 extern "C" {
 
-void add_order(int id, int side, double price, int qty) {
-    ob.addOrder(Order(id, static_cast<Side>(side), price, qty));
+__declspec(dllexport) void init_book() {
+    if (!book)
+        book = new OrderBook();
 }
 
-const char* get_book() {
+// Fixed: added instrument_id as second argument
+__declspec(dllexport) void add_order(int id, int instrument_id, int side, double price, int qty) {
+    if (!book) init_book();
+
+    Order o(
+        id,
+        instrument_id,               // ✅ instrument id
+        static_cast<Side>(side),     // convert int to enum Side
+        price,
+        qty
+    );
+
+    book->addOrder(o);
+}
+
+__declspec(dllexport) const char* get_book() {
     static std::string snapshot;
-    snapshot = ob.getBookSnapshot();
+    if (!book) init_book();
+    snapshot = book->getBookSnapshot();
     return snapshot.c_str();
 }
 
-const char* get_trades() {
-    static std::string trade_snapshot;
-    trade_snapshot = ob.getTrades();
-    return trade_snapshot.c_str();
+__declspec(dllexport) const char* get_trades() {
+    static std::string t;
+    if (!book) init_book();
+    t = book->getTrades();
+    return t.c_str();
 }
 
 }

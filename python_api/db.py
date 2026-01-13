@@ -3,9 +3,11 @@ import sqlite3
 conn = sqlite3.connect("ultrabook.db", check_same_thread=False)
 cursor = conn.cursor()
 
+# ORDERS TABLE
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY,
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    instrument_id INTEGER,
     side INTEGER,
     price REAL,
     quantity INTEGER,
@@ -13,11 +15,13 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
+# TRADES TABLE
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS trades (
     trade_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    buy_id INTEGER,
-    sell_id INTEGER,
+    instrument_id INTEGER,
+    buy_order_id INTEGER,
+    sell_order_id INTEGER,
     price REAL,
     quantity INTEGER,
     timestamp TEXT
@@ -28,17 +32,21 @@ conn.commit()
 
 def insert_order(order):
     cursor.execute(
-        "INSERT INTO orders VALUES (?, ?, ?, ?, datetime('now'))",
-        (order.id, order.side, order.price, order.qty)
+        """
+        INSERT INTO orders (instrument_id, side, price, quantity, timestamp)
+        VALUES (?, ?, ?, ?, datetime('now'))
+        """,
+        (order.instrument_id, order.side, order.price, order.qty)
     )
     conn.commit()
 
-def insert_trade(buy_id, sell_id, price, qty):
+def insert_trade(instrument_id, buy_order_id, sell_order_id, price, qty):
     cursor.execute(
         """
-        INSERT INTO trades (buy_id, sell_id, price, quantity, timestamp)
-        VALUES (?, ?, ?, ?, datetime('now'))
+        INSERT INTO trades
+        (instrument_id, buy_order_id, sell_order_id, price, quantity, timestamp)
+        VALUES (?, ?, ?, ?, ?, datetime('now'))
         """,
-        (buy_id, sell_id, price, qty)
+        (instrument_id, buy_order_id, sell_order_id, price, qty)
     )
     conn.commit()
