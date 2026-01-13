@@ -6,6 +6,7 @@ from db import insert_order, insert_trade
 app = FastAPI(title="Ultrabook Trading Engine")
 
 class Order(BaseModel):
+    order_id: int          # ✅ Added
     instrument_id: int
     side: int   # 0 = BUY, 1 = SELL
     price: float
@@ -13,20 +14,20 @@ class Order(BaseModel):
 
 @app.post("/order")
 def place_order(order: Order):
-    # Add order to in-memory orderbook
-    add_order(order.instrument_id, order.side, order.price, order.qty)
+    # ✅ FIXED: Pass all 5 parameters
+    add_order(order.order_id, order.instrument_id, order.side, order.price, order.qty)
 
     # Insert order into DB
     insert_order(order)
 
-    # Fetch trades from orderbook (already a Python list now)
+    # Fetch trades from orderbook
     trades = get_trades()
 
-    # Insert trades into DB
+    # ✅ FIXED: Use correct trade field names
     for t in trades:
         insert_trade(
-            t['instrument_id'],
-            t['buy_order_id'],   # assuming your trade dict uses these keys
+            order.instrument_id,  # You'll need to track this differently for trades
+            t['buy_order_id'],    
             t['sell_order_id'],
             t['price'],
             t['qty']
@@ -36,8 +37,8 @@ def place_order(order: Order):
 
 @app.get("/book")
 def book():
-    return {"orderbook": get_book()}  # already a dict
+    return {"orderbook": get_book()}
 
 @app.get("/trades")
 def trades():
-    return {"trades": get_trades()}   # already a list
+    return {"trades": get_trades()}

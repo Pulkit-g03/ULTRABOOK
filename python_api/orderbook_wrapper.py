@@ -10,12 +10,15 @@ if mingw_bin not in os.environ['PATH']:
 
 lib = cdll.LoadLibrary("E:\\UltraBook\\cpp_engine\\build_x64\\libULTRABOOK.dll")
 
-lib.add_order.argtypes = [c_int, c_int, c_double, c_int]
+# ✅ FIXED: Added instrument_id parameter
+lib.add_order.argtypes = [c_int, c_int, c_int, c_double, c_int]
+#                         order_id, instrument_id, side, price, qty
 lib.get_book.restype = c_char_p
 lib.get_trades.restype = c_char_p
 
-def add_order(id, side, price, qty):
-    lib.add_order(id, side, price, qty)
+# ✅ FIXED: Added order_id and instrument_id parameters
+def add_order(order_id, instrument_id, side, price, qty):
+    lib.add_order(order_id, instrument_id, side, price, qty)
 
 def parse_json_string(s: str):
     """
