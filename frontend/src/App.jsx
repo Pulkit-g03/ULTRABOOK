@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 
 export default function App() {
-  const [order, setOrder] = useState({ id: "", side: 0, price: "", qty: "" });
+  const [order, setOrder] = useState({ 
+    order_id: "", 
+    instrument_id: "",  // ✅ Added
+    side: 0, 
+    price: "", 
+    qty: "" 
+  });
   const [book, setBook] = useState("");
   const [trades, setTrades] = useState("");
 
@@ -22,7 +28,8 @@ export default function App() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: Number(order.id),
+        order_id: Number(order.order_id),           // ✅ Fixed name
+        instrument_id: Number(order.instrument_id), // ✅ Added
         side: Number(order.side),
         price: Number(order.price),
         qty: Number(order.qty)
@@ -56,7 +63,14 @@ export default function App() {
           <input
             className="input"
             placeholder="Order ID"
-            onChange={(e) => setOrder({ ...order, id: e.target.value })}
+            onChange={(e) => setOrder({ ...order, order_id: e.target.value })} // ✅ Fixed
+          />
+
+          {/* ✅ ADDED: Instrument ID input */}
+          <input
+            className="input"
+            placeholder="Instrument ID (e.g., 1 for AAPL, 2 for GOOGL)"
+            onChange={(e) => setOrder({ ...order, instrument_id: e.target.value })}
           />
 
           <select
