@@ -1,0 +1,93 @@
+/* ================================
+   ULTRABOOK CUSTOM STYLES
+================================ */
+
+/* Page background */
+body {
+  background-color: #f3f4f6;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Main container */
+.app-container {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Headings */
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Cards */
+.card-box {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Order book & trades */
+.pre-box {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 8px;
+  height: 260px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 0.85rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.button {
+  width: 100%;
+  padding: 10px;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.button:hover {
+  background-color: #15803d;
+}
+
+/* Trades section */
+.trades {
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
